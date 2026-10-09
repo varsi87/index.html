@@ -1,281 +1,183 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل 🇦🇪 امارات | WireGuard</title>
-    <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Tahoma, sans-serif; }
-        body { background-color: #0b0f19; color: #f3f4f6; min-height: 100vh; padding: 10px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 450px; }
-        .card { background: #111827; border: 1px solid #1f2937; border-radius: 14px; padding: 12px; margin-bottom: 10px; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.4); }
-        h1 { font-size: 1rem; color: #fff; margin-bottom: 4px; }
-        p { font-size: 0.7rem; color: #9ca3af; margin-bottom: 6px; }
-        .badge { display: inline-block; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.3); padding: 2px 10px; border-radius: 15px; font-size: 0.68rem; font-weight: bold; }
-        
-        .tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-        .tab { flex: 1; background: #111827; border: 1px solid #1f2937; color: #9ca3af; padding: 8px 2px; border-radius: 8px; font-size: 0.72rem; cursor: pointer; text-align: center; }
-        .tab.active { background: #3b82f6; color: #fff; font-weight: bold; }
-        
-        .content { display: none; }
-        .content.active { display: block; }
-        .title { font-size: 0.85rem; margin-bottom: 8px; color: #fff; text-align: right; font-weight: bold; }
-        
-        .group { margin-bottom: 8px; text-align: right; }
-        label { display: block; font-size: 0.7rem; color: #9ca3af; margin-bottom: 3px; }
-        input { width: 100%; background: #0f172a; border: 1px solid #1f2937; border-radius: 8px; padding: 9px; color: #fff; font-size: 0.8rem; outline: none; }
-        
-        .btn { width: 100%; background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); color: #fff; border: none; padding: 10px; border-radius: 8px; font-size: 0.8rem; font-weight: bold; cursor: pointer; }
-        
-        .item { background: #0f172a; border: 1px solid #1f2937; border-radius: 10px; padding: 10px; margin-bottom: 8px; text-align: right; }
-        .item-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; font-size: 0.8rem; font-weight: bold; }
-        .item-sub { font-size: 0.65rem; color: #9ca3af; margin-bottom: 8px; }
-        
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
-        .action-btn { background: #1e293b; border: 1px solid #1f2937; color: #f3f4f6; padding: 6px 2px; border-radius: 6px; font-size: 0.65rem; cursor: pointer; text-align: center; }
-        .action-btn.qr { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
-        .action-btn.cp { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
-        .action-btn.dl { background: rgba(16, 185, 129, 0.2); color: #34d399; }
-        .action-btn.st { background: rgba(239, 68, 68, 0.2); color: #f87171; }
-        .action-btn.up { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
-        .action-btn.sub { background: linear-gradient(135deg, #f97316 0%, #ef4444 100%); color: #fff; grid-column: span 2; font-weight: bold; }
-        .action-btn.del { background: rgba(107, 114, 128, 0.2); color: #9ca3af; }
-        
-        .status { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; }
-        .status.on { background: rgba(16,185,129,0.2); color: #34d399; }
-        .status.off { background: rgba(239,68,68,0.2); color: #f87171; }
-
-        /* Modal Styles */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; padding: 15px; }
-        .modal-box { background: #111827; border: 1px solid #1f2937; border-radius: 14px; padding: 16px; width: 100%; max-width: 320px; text-align: center; }
-        .modal-title { font-size: 0.9rem; color: #fff; margin-bottom: 10px; font-weight: bold; }
-        .qr-img { width: 170px; height: 170px; background: #fff; padding: 8px; border-radius: 8px; margin-bottom: 10px; display: inline-block; }
-        .sub-box { width: 100%; background: #0f172a; border: 1px solid #1f2937; border-radius: 8px; padding: 8px; color: #60a5fa; font-size: 0.7rem; text-align: center; direction: ltr; margin-bottom: 10px; outline: none; }
-        .close-btn { background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; width: 100%; }
-    </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>پنل مدیریت OpenVPN گیمینگ | PUBGメAZVIX</title>
+<style>
+:root{--accent:#38bdf8;--accent2:#e879f9;--card:rgba(12,18,34,0.95);--text:#e2e8f0;--muted:#94a3b8;--border:#38bdf855}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,"Segoe UI",sans-serif;background:linear-gradient(145deg,#05080f,#0c1222);color:var(--text);min-height:100vh;line-height:1.65;padding:14px}
+.wrap{max-width:780px;margin:0 auto}
+header{text-align:center;padding:18px;background:var(--card);border:1px solid var(--border);border-radius:16px;margin-bottom:12px}
+header h1{font-size:1.3rem;background:linear-gradient(90deg,var(--accent),#60a5fa,var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{display:inline-block;marker:none;margin-top:8px;padding:4px 12px;border:1px solid var(--accent);border-radius:999px;font-size:0.75rem;color:var(--accent)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px}
+.card h2{font-size:1.05rem;color:var(--accent);margin-bottom:10px}
+label{display:block;font-size:0.82rem;color:var(--muted);margin:8px 0 4px}
+textarea{width:100%;height:180px;padding:10px;background:#05080f;border:1px solid var(--border);border-radius:10px;color:#86efac;font-size:0.75rem;font-family:monospace;direction:ltr;text-align:left}
+.btn{padding:11px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:0.86rem;margin:3px;display:inline-flex;align-items:center;gap:5px}
+.btn-p{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#05080f}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--text)}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#0a1220;border:1px solid var(--accent);padding:12px 18px;border-radius:12px;z-index:99;opacity:0;transition:0.3s;font-weight:600;max-width:90%;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.owner{color:#a78bfa;font-size:0.85rem;font-weight:700;text-align:center;margin-top:10px}
+</style>
 </head>
 <body>
-<div class="container">
-    <div class="card">
-        <h1>پنل 🇦🇪 امارات</h1>
-        <p>پنل متصل به کانفیگ اصلی WireGuard | حجم پنل بر اساس سهم کانفیگ</p>
-        <div class="badge">🛡️ مالک: پابجی پلیر (Arsin)</div>
-    </div>
+<div class="wrap">
+  <header>
+    <h1>🛡️ پنل مدیریت OpenVPN گیمینگ</h1>
+    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">پروتون VPN / سرور اختصاصی | PUBGメAZVIX</p>
+    <span class="badge">مدیر: PUBGメAZVIX</span>
+  </header>
 
-    <div class="tabs">
-        <div class="tab" onclick="switchTab('dash', this)">داشبورد</div>
-        <div class="tab active" onclick="switchTab('make', this)">ساخت کانفیگ</div>
-        <div class="tab" onclick="switchTab('list', this)" id="listTabBtn">کانفیگ‌ها</div>
-        <div class="tab" onclick="switchTab('sub', this)">لینک ساب</div>
-    </div>
+  <div class="card">
+    <h2>📂 فایل کانفیگ اصلی OpenVPN</h2>
+    <label>متن کامل کانفیگ (آماده برای کپی و ذخیره در فایل ovpn.)</label>
+    <textarea id="ovpnText" readonly>client
+setenv FRIENDLY_NAME "dpf4pa7hxd"
+dev tun
+proto tcp-client
+remote-random
+remote 185.183.34.41 443 tcp-client
+remote 185.183.34.41 8443 tcp-client
+remote 185.183.34.41 7770 tcp-client
+remote 185.183.34.41 5995 tcp-client
+resolv-retry infinite
+nobind
+persist-key
+persist-tun
+remote-cert-tls server
+reneg-sec 0
+cipher AES-256-GCM
+data-ciphers AES-256-GCM:AES-128-GCM
+data-ciphers-fallback AES-256-GCM
+tun-mtu 1500
+mssfix 1200
+sndbuf 524288
+rcvbuf 524288
+tcp-nodelay
+connect-retry 1
+connect-timeout 3
+server-poll-timeout 2
+ping 10
+ping-restart 60
+fast-io
+pull
+redirect-gateway def1 bypass-dhcp
+dhcp-option DNS 1.1.1.1
+dhcp-option DNS 8.8.8.8
+block-ipv6
 
-    <!-- داشبورد -->
-    <div id="dash" class="content">
-        <div class="card">
-            <div class="title">📊 وضعیت کلی پنل</div>
-            <p style="text-align: right;">سرور: امارات (پایداری عالی)</p>
-            <p style="text-align: right;">کل مصرف: 237 گیگ از 8000 گیگ</p>
-            <p style="text-align: right;">تعداد کل کانفیگ‌ها: <span id="countBox">0</span></p>
-        </div>
-    </div>
+<auth-user-pass>
+8OYVWshJPw61PN0l+b:0+f1+f2+nr+pmp
+BDixNQo5LzfL1V6xC7AMJRPG4i1PeliV
+</auth-user-pass>
 
-    <!-- ساخت کانفیگ -->
-    <div id="make" class="content active">
-        <div class="card">
-            <div class="title">➕ ساخت کانفیگ پابجی</div>
-            <div class="group">
-                <label>روز اعتبار</label>
-                <input type="number" id="confDays" value="30">
-            </div>
-            <div class="group">
-                <label>کاربر (تعداد کاربر / سهم)</label>
-                <input type="number" id="confUsers" value="1">
-            </div>
-            <div class="group">
-                <label>حجم (گیگ)</label>
-                <input type="number" id="confTraffic" value="50">
-            </div>
-            <div class="group">
-                <label>نام (اختیاری)</label>
-                <input type="text" id="confName" value="پابجی ویژه">
-            </div>
-            <button class="btn" onclick="createConfig()">✨ ساخت + دانلود</button>
-        </div>
-    </div>
+<ca>
+-----BEGIN CERTIFICATE-----
+MIIFnTCCA4WgAwIBAgIUCI574SM3Lyh47GyNl0WAOYrqb5QwDQYJKoZIhvcNAQEL
+BQAwXjELMAkGA1UEBhMCQ0gxHzAdBgNVBAoMFlByb3RvbiBUZWNobm9sb2dpZXMg
+QUcxEjAQBgNVBAsMCVByb3RvblZPNjEaMBgGA1UEAwwRUHJvdG9uVlBOIFJvb3Qg
+Q0EwHhcNMTkxMDE3MDgwNjQxWhcNMzkxMDEyMDgwNjQxWjBeMQswCQYDVQQGEwJD
+SDEfMB0GA1UECgwWUHJvdG9uIFRlY2hub2xvZ2llcyBBRzESMBAGA1UECwwJUHJv
+dG9uVlBOMRowGAYDVQQDDBFQcm90b25WUE4gUm9vdCBDQTCCAiIwDQYJKoZIhvcN
+AQEBBQADggIPADCCAgoCggIBAMkUT7zMUS5C+NjQ7YoGpVFlfbN9HFgG4JiKfHB8
+QxnPPRgyTi0zVOAj1ImsRilauY8Ddm5dQtd8qcApoz6oCx5cFiiSQG2uyhS/59Zl
+5wqIkw1o+CgwZgeWkq04lcrxhhfPgJZRFjrYVezy/Z2Ssd18s3/FFNQ+2iV1KC2K
+z8eSPr50u+l9vEKsKiNGkJTdlWjoDKZM2C15i/h8Smi+PdJlx7WMTtYoVC1Fzq0r
+aCPDQl18kspu11b6d8ECPWghKcDIIKuA0r0nGqF1GvH1AmbC/xUaNrKgz9AfioZL
+MP/l22tVG3KKM1ku0eYHX7NzNHgkM2JKnBBannImQQBGTAcvvUlnfF3AHx4vzx7H
+ahpBz8ebThx2uv+vzu8lCVEcKjQObGwLbAONJN2enug8hwSSZQv7tz7onDQWlYh0
+El5fnkrEQGbukNnSyOqTwfobvBllIPzBqdO38eZFA0YTlH9plYjIjPjGl931lFAA
+3G9t0x7nxAauLXN5QVp1yoF1tzXc5kN0SFAasM9VtVEOSMaGHLKhF+IMyVX8h5Iu
+IRC8u5O672r7cHS+Dtx87LjxypqNhmbf1TWyLJSoh0qYhMr+BbO7+N6zKRIZPI5b
+MXc8Be2pQwbSA4ZrDvSjFC9yDXmSuZTyVo6Bqi/KCUZeaXKof68oNxVYeGowNeQd
+g/znAgMBAAGjUzBRMB0GA1UdDgQWBBR44WtTuEKCaPPUltYEHZoyhJo+4TAfBgNV
+HSMEGDAWgBR44WtTuEKCaPPUltYEHZoyhJo+4TAPBgNVHRMBAf8EBTADAQH/MA0G
+CSqGSIb3DQEBCwUAA4ICAQBBmzCQlHxOJ6izys3TVpaze+rUkA9GejgsB2DZXIcm
+4Lj/SNzQsPlZRu4S0IZV253dbE1DoWlHanw5lnXwx8iU82X7jdm/5uZOwj2NqSqT
+bTn0WLAC6khEKKe5bPTf18UOcwN82Le3AnkwcNAaBO5/TzFQVgnVedXr2g6rmpp9
+gdedeEl9acB7xqfYfkrmijqYMm+xeG2rXaanch3HjweMDuZdT/Ub5G6oir0Kowft
+lA1ytjXRg+X+yWymTpF/zGLYfSodWWjMKhpzZtRJZ+9B0pWXUyY7SuCj5T5SMIAu
+x3NQQ46wSbHRolIlwh7zD7kBgkyLe7ByLvGFKa2Vw4PuWjqYwrRbFjb2+EKAwPu6
+VTWz/QQTU8oJewGFipw94Bi61zuaPvF1qZCHgYhVojRy6KcqncX2Hx9hjfVxspBZ
+DrVH6uofCmd99GmVu+qizybWQTrPaubfc/a2jJIbXc2bRQjYj/qmjE3hTlmO3k7V
+EP6i8CLhEl+dX75aZw9StkqjdpIApYwX6XNDqVuGzfeTXXclk4N4aDPwPFM/Yo/e
+KnvlNlKbljWdMYkfx8r37aOHpchH34cv0Jb5Im+1H07ywnshXNfUhRazOpubJRHn
+bjDuBwWS1/Vwp5AJ+QHsPXhJdl3qHc1szJZVJb3VyAWvG/bWApKfFuZX18tiI4N0
+EA==
+-----END CERTIFICATE-----
+</ca>
 
-    <!-- لیست کانفیگ‌ها -->
-    <div id="list" class="content">
-        <div class="card">
-            <div class="title">📁 کانفیگ‌های ساخته شده</div>
-            <div id="configsContainer"><p style="color: #9ca3af; font-size: 0.7rem;">هنوز کانفیگی ساخته نشده است.</p></div>
-        </div>
-    </div>
+<tls-crypt>
+-----BEGIN OpenVPN Static key V1-----
+6acef03f62675b4b1bbd03e53b187727
+423cea742242106cb2916a8a4c829756
+3d22c7e5cef430b1103c6f66eb1fc5b3
+75a672f158e2e2e936c3faa48b035a6d
+e17beaac23b5f03b10b868d53d03521d
+8ba115059da777a60cbfd7b2c9c57472
+78a15b8f6e68a3ef7fd583ec9f398c8b
+d4735dab40cbd1e3c62a822e97489186
+c30a0b48c7c38ea32ceb056d3fa5a710
+e10ccc7a0ddb363b08c3d2777a3395e1
+0c0b6080f56309192ab5aacd4b45f55d
+a61fc77af39bd81a19218a79762c3386
+2df55785075f37d8c71dc8a42097ee43
+344739a0dd48d03025b0450cf1fb5e8c
+aeb893d9a96d1f15519bb3c4dcb40ee3
+16672ea16c012664f8a9f11255518deb
+-----END OpenVPN Static key V1-----
+</tls-crypt>
+</textarea>
 
-    <!-- لینک ساب کلی -->
-    <div id="sub" class="content">
-        <div class="card">
-            <div class="title">🔗 لینک اشتراک کلی (Subscription)</div>
-            <input type="text" class="sub-box" readonly value="https://api.pastes.dev/wireguard-sub-main">
-            <button class="btn" onclick="alert('لینک ساب کلی کپی شد!')">کپی لینک ساب کلی</button>
-        </div>
+    <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+      <button type="button" class="btn btn-p" id="btnCopy">📋 کپی کانفیگ</button>
+      <button type="button" class="btn btn-o" id="btnDownload">⬇️ دانلود فایل ovpn.</button>
     </div>
+    <div class="owner">مدیریت اختصاصی PUBGメAZVIX</div>
+  </div>
 </div>
-
-<!-- Modal for QR & Sub Link -->
-<div id="modal" class="modal">
-    <div class="modal-box">
-        <div class="modal-title" id="modalTitle">جزئیات کانفیگ</div>
-        <div id="modalBody"></div>
-        <button class="close-btn" onclick="closeModal()">بستن</button>
-    </div>
-</div>
+<div class="toast" id="toast"></div>
 
 <script>
-    const parentConfig = `[Interface]
-PrivateKey = ABFU4WRDb7WZ8zDVkmegu3F1GBRaeUJh=8b9a02jUI=
-Address = 192.168.72.77/32
-DNS = 1.1.1.1,8.8.8.8
+function toast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(function(){ t.classList.remove("show"); }, 3000);
+}
 
-[Peer]
-PublicKey = rtKJ7YW0UBdvgb5by+ojafsFOUf0Y3MziiaWLL0ytkY=
-Endpoint = t1wire.steelping.ir:58531
-AllowedIPs = 0.0.0.0/0,::/0`;
+document.getElementById("btnCopy").addEventListener("click", function(){
+  var text = document.getElementById("ovpnText").value;
+  if(navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function(){ toast("✅ کانفیگ با موفقیت کپی شد"); });
+  } else {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    document.body.removeChild(ta);
+    toast("✅ کپی شد");
+  }
+});
 
-    let db = JSON.parse(localStorage.getItem('wireguard_panel_db') || '[]');
-
-    function switchTab(id, el) {
-        document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        if(el) el.classList.add('active');
-        if(id === 'list' || id === 'dash') renderList();
-    }
-
-    function createConfig() {
-        let name = document.getElementById('confName').value.trim() || 'پابجی کاربر';
-        let days = document.getElementById('confDays').value;
-        let users = document.getElementById('confUsers').value;
-        let traffic = document.getElementById('confTraffic').value;
-
-        let newConf = {
-            id: Date.now(),
-            name: name,
-            days: days,
-            users: users,
-            traffic: traffic,
-            status: 'فعال',
-            text: parentConfig + `\n# Name: ${name} | Users: ${users} | Days: ${days}`
-        };
-
-        db.push(newConf);
-        localStorage.setItem('wireguard_panel_db', JSON.stringify(db));
-        
-        downloadFile(newConf.name, newConf.text);
-        alert('کانفیگ با موفقیت ساخته و دانلود شد!');
-        switchTab('list', document.getElementById('listTabBtn'));
-    }
-
-    function renderList() {
-        document.getElementById('countBox').innerText = db.length;
-        let container = document.getElementById('configsContainer');
-        if(db.length === 0) {
-            container.innerHTML = `<p style="color: #9ca3af; font-size: 0.7rem;">هنوز کانفیگی ساخته نشده است.</p>`;
-            return;
-        }
-        let html = '';
-        db.forEach(item => {
-            let stClass = item.status === 'فعال' ? 'on' : 'off';
-            let stText = item.status === 'فعال' ? 'فعال' : 'غیرفعال';
-            let stBtnText = item.status === 'فعال' ? 'غیرفعال 🔴' : 'فعال 🟢';
-            html += `<div class="item">
-                <div class="item-head">
-                    <span>🎮 ${item.name}</span>
-                    <span class="status ${stClass}">${stText}</span>
-                </div>
-                <div class="item-sub">${item.days} روز • باقی ${item.days} • ${item.traffic} گیگ (کاربر: ${item.users})</div>
-                <div class="grid">
-                    <button class="action-btn qr" onclick="showQR(${item.id})">QR 📱</button>
-                    <button class="action-btn cp" onclick="copyText(window.db.find(x=>x.id==${item.id}).text)">کپی 📋</button>
-                    <button class="action-btn dl" onclick="downloadFile('${item.name}', window.db.find(x=>x.id==${item.id}).text)">دانلود 📥</button>
-                    <button class="action-btn st" onclick="toggleItem(${item.id})">${stBtnText}</button>
-                    <button class="action-btn up" onclick="updateConfig(${item.id})">آپدیت 🔄</button>
-                    <button class="action-btn sub" onclick="showSub(${item.id})">لینک ساب 🔗</button>
-                    <button class="action-btn del" onclick="deleteItem(${item.id})">حذف 🗑️</button>
-                </div>
-            </div>`;
-        });
-        container.innerHTML = html;
-        window.db = db;
-    }
-
-    function showQR(id) {
-        let item = db.find(x => x.id === id);
-        if(item) {
-            document.getElementById('modalTitle').innerText = 'بارکد: ' + item.name;
-            let encoded = encodeURIComponent(item.text);
-            document.getElementById('modalBody').innerHTML = `
-                <div><img class="qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encoded}"></div>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-    }
-
-    function showSub(id) {
-        let item = db.find(x => x.id === id);
-        if(item) {
-            document.getElementById('modalTitle').innerText = 'لینک ساب اختصاصی';
-            let subLink = `https://api.pastes.dev/sub/${item.id}`;
-            document.getElementById('modalBody').innerHTML = `
-                <input type="text" class="sub-box" id="subField" readonly value="${subLink}">
-                <button class="btn" onclick="navigator.clipboard.writeText('${subLink}').then(()=>alert('لینک ساب کپی شد!'))">کپی لینک ساب</button>
-            `;
-            document.getElementById('modal').style.display = 'flex';
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('modal').style.display = 'none';
-    }
-
-    function updateConfig(id) {
-        let item = db.find(x => x.id === id);
-        if(item) {
-            alert('کانفیگ ' + item.name + ' با موفقیت آپدیت و تمدید شد!');
-            renderList();
-        }
-    }
-
-    function downloadFile(filename, content) {
-        let blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.href = url;
-        a.download = `${filename}.conf`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    }
-
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => alert('کانفیگ کپی شد!'));
-    }
-
-    function toggleItem(id) {
-        let item = db.find(x => x.id === id);
-        if(item) {
-            item.status = item.status === 'فعال' ? 'غیرفعال' : 'فعال';
-            localStorage.setItem('wireguard_panel_db', JSON.stringify(db));
-            renderList();
-        }
-    }
-
-    function deleteItem(id) {
-        if(confirm('آیا مطمئن هستید؟')) {
-            db = db.filter(x => x.id !== id);
-            localStorage.setItem('wireguard_panel_db', JSON.stringify(db));
-            renderList();
-        }
-    }
+document.getElementById("btnDownload").addEventListener("click", function(){
+  var text = document.getElementById("ovpnText").value;
+  var blob = new Blob([text], {type: "application/x-openvpn-profile;charset=utf-8"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "gaming_config.ovpn";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1500);
+  toast("⬇️ فایل ovpn. دانلود شد");
+});
 </script>
 </body>
 </html>
