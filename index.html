@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>پنل اختصاصی وب‌گردی (500 گیگ) | PUBGメAZVIX</title>
+<title>مگاپنل وب‌گردی (500 گیگ - ۶۰ روزه) | PUBGメAZVIX</title>
 <style>
 :root{--accent:#14b8a6;--accent2:#f97316;--card:rgba(12,18,34,0.95);--text:#e2e8f0;--muted:#94a3b8;--border:#14b8a655}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -45,12 +45,12 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
 <body>
 <div class="wrap">
   <header>
-    <h1>🌐 مگاپنل وب‌گردی پرسرعت (500 گیگ - ۶۰ روزه)</h1>
-    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">مخصوص وب‌گردی و دانلود مثل بمب | PUBGメAZVIX</p>
+    <h1>🌐 پنل وب‌گردی پرسرعت (500 گیگ - ۶۰ روزه)</h1>
+    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">پایدار، پرسرعت، بدون قطعی | PUBGメAZVIX</p>
     <span class="badge">مالک PUBGメAZVIX</span>
   </header>
 
-  <div class="nav">
+  <div class="nav" id="navTabs">
     <button type="button" class="active" data-tab="dash">📊 داشبورد</button>
     <button type="button" data-tab="create">➕ ساخت کانفیگ</button>
     <button type="button" data-tab="configs">📂 کانفیگ‌ها</button>
@@ -60,7 +60,7 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
   <div id="tab-dash" class="tab active">
     <div class="card">
       <h2>📊 داشبورد و وضعیت حجم کل (500 گیگ)</h2>
-      <div class="meta" id="statusMeta">...</div>
+      <div class="meta" id="statusMeta">در حال بارگذاری...</div>
       <div class="quota"><div id="quotaFill" style="width:0%"></div></div>
       <div id="dashList" style="margin-top:12px"></div>
     </div>
@@ -109,37 +109,49 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
 
 <script>
 (function(){
-  var PANEL = {totalGB: 500, countryName: "وب‌گردی (۵۰۰ گیگ - ۶۰ روزه)", flag: "🌐", endpoint: "8.6.112.165:928"};
+  var PANEL = {totalGB: 500, countryName: "وب‌گردی (۵۰۰ گیگ - ۶۰ روزه)", endpoint: "8.6.112.165:928"};
   var FIXED_PRIV = "YFXWfXouBavdqCdR4d1UHL+UK9Xj1yOy5kmTQDGxSGU=";
   var FIXED_IP = "172.16.0.2";
   var SERVER_PUB = "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=";
-  var STORAGE_KEY = "wg_wireguard_web_500gb_60d_v1";
+  var STORAGE_KEY = "wg_wireguard_web_500gb_60d_v2";
   var CONFIGS = [];
   var CONSUMED = 0;
   var LAST_SUB_URL = "";
 
   function toast(msg) {
     var t = document.getElementById("toast");
+    if (!t) return;
     t.textContent = msg;
     t.classList.add("show");
     setTimeout(function(){ t.classList.remove("show"); }, 3000);
   }
 
   function switchTab(id) {
-    document.querySelectorAll(".nav button").forEach(function(b){
-      b.classList.toggle("active", b.getAttribute("data-tab") === id);
+    var buttons = document.querySelectorAll("#navTabs button");
+    buttons.forEach(function(b){
+      if (b.getAttribute("data-tab") === id) b.classList.add("active");
+      else b.classList.remove("active");
     });
-    document.querySelectorAll(".tab").forEach(function(t){ t.classList.remove("active"); });
-    var el = document.getElementById("tab-" + id);
-    if (el) el.classList.add("active");
+    var tabs = document.querySelectorAll(".tab");
+    tabs.forEach(function(t){ t.classList.remove("active"); });
+    var target = document.getElementById("tab-" + id);
+    if (target) target.classList.add("active");
+    
     if (id === "dash") renderDash();
     if (id === "configs") renderList();
     if (id === "sub") renderSub();
   }
 
-  document.querySelectorAll(".nav button").forEach(function(btn){
-    btn.addEventListener("click", function(){ switchTab(btn.getAttribute("data-tab")); });
-  });
+  // مدیریت کلیک تب‌ها به صورت ایمن
+  var navContainer = document.getElementById("navTabs");
+  if (navContainer) {
+    navContainer.addEventListener("click", function(e){
+      var btn = e.target.closest("button[data-tab]");
+      if (btn) {
+        switchTab(btn.getAttribute("data-tab"));
+      }
+    });
+  }
 
   function load() {
     try {
@@ -160,8 +172,11 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
       if (typeof c.usedGB === "undefined") c.usedGB = 0;
     });
   }
+
   function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({ configs: CONFIGS, consumedGB: CONSUMED, httpsSubUrl: LAST_SUB_URL }));
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ configs: CONFIGS, consumedGB: CONSUMED, httpsSubUrl: LAST_SUB_URL }));
+    } catch(e){}
   }
 
   function remainingDays(cfg) {
@@ -173,6 +188,7 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
     var left = Math.ceil((endMs - Date.now()) / 86400000);
     return left > 0 ? left : 0;
   }
+
   function isActive(cfg) {
     if (!cfg || cfg.inSub === false) return false;
     if (remainingDays(cfg) <= 0) return false;
@@ -212,11 +228,15 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
     a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
   }
+
   function copyText(text) {
-    if (navigator.clipboard && navigator.clipboard.writeText)
+    if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function(){ toast("✅ کپی شد"); }).catch(function(){ fallback(text); });
-    else fallback(text);
+    } else {
+      fallback(text);
+    }
   }
+
   function fallback(text) {
     var ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
     try { document.execCommand("copy"); toast("✅ کپی شد"); } catch(e) { toast("❌ کپی نشد"); }
@@ -230,15 +250,20 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
     var act = CONFIGS.filter(isActive).length;
     var statusText = used >= total ? "<span style='color:#ef4444'>⛔ حجم ۵۰۰ گیگ پنل کامل شد</span>" : "<span style='color:#86efac'>🌐 پنل وب‌گردی فعال و پایدار</span>";
     
-    document.getElementById("statusMeta").innerHTML =
-      "وضعیت پنل: " + statusText + "<br>"+
-      "حجم مصرفی کل: <strong style='color:"+(used>=total?"#ef4444":"#86efac")+"'>" + used + "</strong> / " + total + " GB (باقی‌مانده: " + rem + " GB)<br>"+
-      "کانفیگ فعال: <strong>" + act + "</strong> / " + CONFIGS.length + "<br><span class='owner'>مالک PUBGメAZVIX</span>";
+    var metaEl = document.getElementById("statusMeta");
+    if (metaEl) {
+      metaEl.innerHTML =
+        "وضعیت پنل: " + statusText + "<br>"+
+        "حجم مصرفی کل: <strong style='color:"+(used>=total?"#ef4444":"#86efac")+"'>" + used + "</strong> / " + total + " GB (باقی‌مانده: " + rem + " GB)<br>"+
+        "کانفیگ فعال: <strong>" + act + "</strong> / " + CONFIGS.length + "<br><span class='owner'>مالک PUBGメAZVIX</span>";
+    }
     
     var pct = Math.min(100, Math.round((used/total)*100));
     var fill = document.getElementById("quotaFill");
-    fill.style.width = pct + "%";
-    fill.style.background = used >= total ? "#ef4444" : "#14b8a6";
+    if (fill) {
+      fill.style.width = pct + "%";
+      fill.style.background = used >= total ? "#ef4444" : "#14b8a6";
+    }
     
     var btn = document.getElementById("btnCreate");
     if (btn) {
@@ -265,6 +290,7 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
   function renderList() {
     updateStatus();
     var list = document.getElementById("cfgList");
+    if (!list) return;
     if (!CONFIGS.length) { list.innerHTML = '<p style="color:var(--muted);text-align:center;padding:16px">هنوز کانفیگی نیست</p>'; return; }
     var html = "";
     CONFIGS.forEach(function(cfg, i) {
@@ -280,6 +306,7 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
   function renderDash() {
     updateStatus();
     var box = document.getElementById("dashList");
+    if (!box) return;
     if (!CONFIGS.length) { box.innerHTML = '<p style="color:var(--muted)">کانفیگی نیست</p>'; return; }
     var html = "";
     CONFIGS.forEach(function(cfg, i) {
@@ -295,6 +322,7 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
     var el = document.getElementById("subHttps");
     if (el) { el.value = LAST_SUB_URL || ""; el.placeholder = LAST_SUB_URL ? "" : "هنوز ساخته نشده — دکمه ساخت لینک را بزنید"; }
     var box = document.getElementById("subCfgList");
+    if (!box) return;
     if (!CONFIGS.length) { box.innerHTML = '<p style="color:var(--muted)">ابتدا کانفیگ بسازید</p>'; return; }
     var html = '<strong style="color:var(--accent);font-size:0.9rem">لینک ساب برای هر کانفیگ:</strong>';
     CONFIGS.forEach(function(cfg, i) {
@@ -352,4 +380,183 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
     var url = null;
     try {
       var res = await fetch("https://api.pastes.dev/post", { method:"POST", headers:{"Content-Type":"text/html; charset=utf-8"}, body: bodyHtml });
-      if (res.ok) { var data = await res.json(); if (data && data.key) url = "https://ap
+      if (res.ok) { var data = await res.json(); if (data && data.key) url = "https://api.pastes.dev/"+data.key; }
+    } catch(e) {}
+    if (!url) {
+      try {
+        var fd = new FormData();
+        fd.append("file", new Blob([bodyHtml],{type:"text/html;charset=utf-8"}), "sub.html");
+        var res2 = await fetch("https://0x0.st", { method:"POST", body: fd });
+        if (res2.ok) { var t = (await res2.text()).trim(); if (t.indexOf("http")===0) url = t; }
+      } catch(e) {}
+    }
+    return url;
+  }
+
+  async function createSubFor(i) {
+    var cfg = CONFIGS[i];
+    if (!cfg) return;
+    toast("⏳ ساخت لینک ساب...");
+    var body = buildSubPageHtml(cfg);
+    var url = await uploadHtml(body);
+    if (url) {
+      cfg.httpsSubUrl = url;
+      LAST_SUB_URL = url;
+      save();
+      var el = document.getElementById("subHttps");
+      if (el) el.value = url;
+      copyText(url);
+      toast("✅ لینک ساب ساخته و کپی شد");
+      renderSub(); renderDash(); renderList();
+    } else {
+      window.open(URL.createObjectURL(new Blob([body],{type:"text/html;charset=utf-8"})), "_blank");
+      toast("⚠ هاست در دسترس نبود — صفحه محلی باز شد");
+    }
+  }
+
+  async function createSubAll() {
+    var body = buildAllSubPageHtml();
+    if (!body) { toast("⚠ کانفیگ فعالی نیست"); return; }
+    toast("⏳ ساخت لینک همه فعال‌ها...");
+    var url = await uploadHtml(body);
+    if (url) {
+      LAST_SUB_URL = url;
+      save();
+      var el = document.getElementById("subHttps");
+      if (el) el.value = url;
+      copyText(url);
+      toast("✅ لینک همه فعال‌ها ساخته شد");
+    } else {
+      window.open(URL.createObjectURL(new Blob([body],{type:"text/html;charset=utf-8"})), "_blank");
+      toast("⚠ صفحه محلی باز شد");
+    }
+  }
+
+  function createConfig() {
+    if (Number(CONSUMED) >= PANEL.totalGB) {
+      toast("⛔ حجم کل پنل (500 گیگ) تمام شده است!");
+      return;
+    }
+    var daysInput = document.getElementById("cfgDays");
+    var gbInput = document.getElementById("cfgGB");
+    var nameInput = document.getElementById("cfgName");
+
+    var days = daysInput ? parseInt(daysInput.value, 10) || 60 : 60;
+    var gb = gbInput ? parseInt(gbInput.value, 10) || 50 : 50;
+    var remPanel = PANEL.totalGB - Number(CONSUMED);
+    
+    if (gb > remPanel) {
+      gb = remPanel;
+      toast("⚠ حجم درخواستی به سقف باقی‌مانده پنل محدود شد (" + gb + " گیگ)");
+    }
+    var name = nameInput ? (nameInput.value || "").trim() : "";
+    if (!name) name = "Web_Client_500GB";
+    
+    var built = buildConf(name, days, gb);
+    CONFIGS.unshift({
+      id: "cfg_"+Date.now().toString(36), name:name, days:days, gb:gb, usedGB:0,
+      confText: built.conf, createdAt: new Date().toISOString(), expiresAt: new Date(Date.now()+days*86400000).toISOString(), inSub: true, httpsSubUrl: null
+    });
+    CONSUMED = Number(CONSUMED) + gb;
+    LAST_SUB_URL = "";
+    save();
+    renderAll();
+    downloadText(built.conf, name.replace(/\s+/g,"_") + ".conf");
+    toast("✅ کانفیگ وب ۵۰۰ گیگ ساخته و دانلود شد");
+    if (nameInput) nameInput.value = "";
+    switchTab("configs");
+  }
+
+  function handleAction(a, i) {
+    var cfg = CONFIGS[i];
+    if (!cfg) return;
+    if (a === "dl") {
+      if (!isActive(cfg)) { toast("⛔ دانلود بسته"); return; }
+      downloadText(cfg.confText, (cfg.name||"config")+".conf");
+    } else if (a === "copy") {
+      if (!isActive(cfg)) { toast("⛔ کپی بسته"); return; }
+      copyText(cfg.confText||"");
+    } else if (a === "qr") {
+      if (!isActive(cfg)) { toast("⛔ QR بسته"); return; }
+      window.open("https://api.qrserver.com/v1/create-qr-code/?size=240x240&data="+encodeURIComponent((cfg.confText||"").slice(0,1200)), "_blank");
+    } else if (a === "toggle") {
+      cfg.inSub = !(cfg.inSub !== false);
+      cfg.httpsSubUrl = null; LAST_SUB_URL = "";
+      save(); renderAll();
+      toast(cfg.inSub!==false?"✅ فعال":"⏸ غیرفعال");
+    } else if (a === "del") {
+      if (!confirm("حذف شود؟ (حجم به پنل برمی‌گردد)")) return;
+      CONSUMED = Math.max(0, Number(CONSUMED) - (Number(cfg.gb)||0));
+      CONFIGS.splice(i,1); LAST_SUB_URL = "";
+      save(); renderAll(); toast("🗑️ حذف شد و حجم برگشت");
+    } else if (a === "sub") {
+      createSubFor(i);
+    }
+  }
+
+  function renderAll() { 
+    renderList(); 
+    renderDash(); 
+    renderSub(); 
+    updateStatus(); 
+  }
+
+  // اتصال رویداد دکمه ساخت کانفیگ
+  var btnCreate = document.getElementById("btnCreate");
+  if (btnCreate) {
+    btnCreate.addEventListener("click", function(e){
+      e.preventDefault();
+      createConfig();
+    });
+  }
+
+  // رویدادهای لینک ساب و کپی‌ها
+  var btnSubLatest = document.getElementById("btnSubLatest");
+  if (btnSubLatest) btnSubLatest.addEventListener("click", function(){ if(!CONFIGS.length){toast("کانفیگی نیست");return;} createSubFor(0); });
+
+  var btnSubAll = document.getElementById("btnSubAll");
+  if (btnSubAll) btnSubAll.addEventListener("click", function(){ createSubAll(); });
+
+  var btnCopySub = document.getElementById("btnCopySub");
+  if (btnCopySub) btnCopySub.addEventListener("click", function(){
+    var v = document.getElementById("subHttps");
+    var val = v ? v.value : "";
+    if (!val || val.indexOf("http")!==0) { toast("⚠ ابتدا لینک بسازید"); return; }
+    copyText(val);
+  });
+
+  var btnOpenSub = document.getElementById("btnOpenSub");
+  if (btnOpenSub) btnOpenSub.addEventListener("click", function(){
+    var v = document.getElementById("subHttps");
+    var val = v ? v.value : "";
+    if (val && val.indexOf("http")===0) window.open(val, "_blank");
+    else if (CONFIGS.length) {
+      var body = buildSubPageHtml(CONFIGS[0]);
+      window.open(URL.createObjectURL(new Blob([body],{type:"text/html;charset=utf-8"})), "_blank");
+    } else toast("کانفیگی نیست");
+  });
+
+  var btnCopyB64 = document.getElementById("btnCopyB64");
+  if (btnCopyB64) btnCopyB64.addEventListener("click", function(){
+    var list = CONFIGS.filter(isActive);
+    if (!list.length) { toast("کانفیگ فعالی نیست"); return; }
+    var body = list.map(function(c,i){ return "# "+(c.name||i)+"\n"+(c.confText||""); }).join("\n\n");
+    try { copyText(btoa(unescape(encodeURIComponent(body)))); } catch(e) { copyText(btoa(body)); }
+  });
+
+  // مدیریت رویدادهای کلیک پویا برای دکمه‌های لیست کانفیگ‌ها و داشبورد
+  document.body.addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-a]");
+    if (!btn || btn.disabled) return;
+    var action = btn.getAttribute("data-a");
+    var index = parseInt(btn.getAttribute("data-i"), 10);
+    handleAction(action, index);
+  });
+
+  // اجرای اولیه بارگذاری
+  load();
+  renderAll();
+})();
+</script>
+</body>
+</html>
