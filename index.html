@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>مگاپنل تخصصی گیم و وبگردی (2 ترابایت) | PUBGメAZVIX</title>
+<title>مگاپنل فوق پرسرعت گیم و وبگردی (2 ترابایت) | PUBGメAZVIX</title>
 <style>
 :root{--accent:#14b8a6;--accent2:#f97316;--card:rgba(12,18,34,0.95);--text:#e2e8f0;--muted:#94a3b8;--border:#14b8a655}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -46,7 +46,7 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
 <div class="wrap">
   <header>
     <h1>🎮 مگاپنل فوق پرسرعت گیم و وبگردی (2 ترابایت)</h1>
-    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">مخصوص پابجی و گیم با پینگ زیر ۱۰۰ و سرعت بالا | PUBGメAZVIX</p>
+    <p style="color:var(--muted);margin-top:6px;font-size:0.9rem">مخصوص پابجی و گیم با پینگ پایین و سرعت بالا | PUBGメAZVIX</p>
     <span class="badge">مالک PUBGメAZVIX</span>
   </header>
 
@@ -109,7 +109,6 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
 
 <script>
 (function(){
-  // اطلاعات کانفیگ پرسرعت شما به همراه بهینه‌سازی گیمینگ
   var PANEL = { "totalGB": 2000, countryName: "سرور موشکی گیم و وب", flag: "🎮", endpoint: "8.6.112.165:928" };
   var FIXED_PRIV = "YFXWfXouBavdqCdR4d1UHL+UK9Xj1yOy5kmTQDGxSGU=";
   var FIXED_IP = "172.16.0.2";
@@ -356,4 +355,185 @@ textarea{min-height:70px;font-family:monospace;font-size:0.75rem;direction:ltr;t
         '<h3>'+(cfg.name||("#"+(idx+1)))+'</h3><p style="color:#16a34a;font-weight:700">● فعال (گیم)</p>'+
         '<p>حجم: '+(cfg.gb||50)+' GB</p>'+
         '<pre style="font-size:11px;overflow:auto;max-height:180px;background:#f5f5f5;padding:8px;direction:ltr;text-align:left">'+(cfg.confText||"").replace(/</g,"&lt;")+'</pre></div>';
-    }).join
+    }).join("");
+    return '<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8"/><title>ساب | مگاپنل گیم</title></head>'+
+      '<body style="font-family:Tahoma;background:#f0f2f5;padding:16px;max-width:480px;margin:0 auto">'+
+      '<h2>🎮 ساب همه کانفیگ‌های گیم</h2><p style="color:#0d9488;font-weight:700">مالک PUBGメAZVIX</p>'+cards+'</body></html>';
+  }
+
+  async function uploadHtml(bodyHtml) {
+    var url = null;
+    try {
+      var res = await fetch("https://api.pastes.dev/post", { method:"POST", headers:{"Content-Type":"text/html; charset=utf-8"}, body: bodyHtml });
+      if (res.ok) { var data = await res.json(); if (data && data.key) url = "https://api.pastes.dev/"+data.key; }
+    } catch(e) {}
+    if (!url) {
+      try {
+        var fd = new FormData();
+        fd.append("file", new Blob([bodyHtml],{type:"text/html;charset=utf-8"}), "sub.html");
+        var res2 = await fetch("https://0x0.st", { method:"POST", body: fd });
+        if (res2.ok) { var t = (await res2.text()).trim(); if (t.indexOf("http")===0) url = t; }
+      } catch(e) {}
+    }
+    return url;
+  }
+
+  async function createSubFor(i) {
+    var cfg = CONFIGS[i];
+    if (!cfg) return;
+    toast("⏳ ساخت لینک ساب...");
+    var body = buildSubPageHtml(cfg);
+    var url = await uploadHtml(body);
+    if (url) {
+      cfg.httpsSubUrl = url;
+      LAST_SUB_URL = url;
+      save();
+      var el = document.getElementById("subHttps");
+      if (el) el.value = url;
+      copyText(url);
+      toast("✅ لینک ساب ساخته و کپی شد");
+      renderSub(); renderDash(); renderList();
+    } else {
+      window.open(URL.createObjectURL(new Blob([body],{type:"text/html;charset=utf-8"})), "_blank");
+      toast("⚠ هاست در دسترس نبود — صفحه محلی باز شد");
+    }
+  }
+
+  async function createSubAll() {
+    var body = buildAllSubPageHtml();
+    if (!body) { toast("⚠ کانفیگ فعالی نیست"); return; }
+    toast("⏳ ساخت لینک همه فعال‌ها...");
+    var url = await uploadHtml(body);
+    if (url) {
+      LAST_SUB_URL = url;
+      save();
+      var el = document.getElementById("subHttps");
+      if (el) el.value = url;
+      copyText(url);
+      toast("✅ لینک همه فعال‌ها ساخته شد");
+    } else {
+      window.open(URL.createObjectURL(new Blob([body],{type:"text/html;charset=utf-8"})), "_blank");
+      toast("⚠ صفحه محلی باز شد");
+    }
+  }
+
+  function createConfig() {
+    var total = Number(PANEL.totalGB)||2000;
+    var rem = Math.max(0, total - (Number(CONSUMED)||0));
+    if (rem <= 0) { toast("⛔ حجم پنل تمام شده"); return; }
+    var days = parseInt(document.getElementById("cfgDays").value,10)||30;
+    var gb = parseInt(document.getElementById("cfgGB").value,10)||50;
+    if (gb > rem) { gb = rem; toast("حجم محدود به "+rem+" GB"); }
+    var name = (document.getElementById("cfgName").value||"").trim() || ("PUBG_Speed_" + (CONFIGS.length+1));
+    var built = buildConf(name, days, gb);
+    CONFIGS.unshift({
+      id: "cfg_"+Date.now().toString(36), name: name, days: days, gb: gb, usedGB: 0,
+      confText: built.conf, createdAt: new Date().toISOString(), expiresAt: new Date(Date.now()+days*86400000).toISOString(), inSub: true, httpsSubUrl: null
+    });
+    CONSUMED = (Number(CONSUMED)||0) + gb;
+    LAST_SUB_URL = "";
+    save();
+    renderList(); renderDash(); renderSub();
+    downloadText(built.conf, name.replace(/[\\/:*?"<>|]+/g,"_").replace(/\s+/g,"_").slice(0,60)+".conf");
+    toast("✅ کانفیگ گیمینگ موشکی ساخته شد");
+    document.getElementById("cfgName").value = "";
+    switchTab("configs");
+  }
+
+  function handleAction(a, i) {
+    var cfg = CONFIGS[i];
+    if (!cfg) return;
+    if (a === "dl") {
+      if (!isActive(cfg)) { toast("⛔ کانفیگ غیرفعال است"); return; }
+      downloadText(cfg.confText, (cfg.name||"config").replace(/\s+/g,"_")+".conf");
+      toast("⬇️ دانلود شد");
+    } else if (a === "copy") {
+      if (!isActive(cfg)) { toast("⛔ کانفیگ غیرفعال است"); return; }
+      copyText(cfg.confText||"");
+    } else if (a === "qr") {
+      if (!isActive(cfg)) { toast("⛔ کانفیگ غیرفعال است"); return; }
+      window.open("https://api.qrserver.com/v1/create-qr-code/?size=240x240&data="+encodeURIComponent((cfg.confText||"").slice(0,1200)), "_blank");
+    } else if (a === "toggle") {
+      cfg.inSub = !(cfg.inSub !== false);
+      cfg.httpsSubUrl = null; LAST_SUB_URL = "";
+      save(); renderAll();
+      toast(cfg.inSub!==false?"✅ فعال شد":"⏸ غیرفعال شد");
+    } else if (a === "reset") {
+      if (!confirm("آپدیت این کانفیگ؟")) return;
+      var built = buildConf(cfg.name, cfg.days, cfg.gb || 50);
+      cfg.confText = built.conf;
+      cfg.httpsSubUrl = null; LAST_SUB_URL = "";
+      save(); renderAll(); toast("🔄 آپدیت شد");
+    } else if (a === "del") {
+      if (!confirm("حذف این کانفیگ؟")) return;
+      CONSUMED = Math.max(0, CONSUMED - (cfg.gb || 0));
+      CONFIGS.splice(i,1); LAST_SUB_URL = "";
+      save(); renderAll(); toast("🗑️ حذف شد");
+    } else if (a === "sub") {
+      createSubFor(i);
+    }
+  }
+
+  function renderAll() { renderList(); renderDash(); renderSub(); updateStatus(); }
+
+  var btnCreate = document.getElementById("btnCreate");
+  if (btnCreate) {
+    btnCreate.addEventListener("click", function(e){ e.preventDefault(); try{ createConfig(); }catch(err){ toast("خطا: "+err.message); } });
+  }
+  
+  var btnSubLatest = document.getElementById("btnSubLatest");
+  if (btnSubLatest) {
+    btnSubLatest.addEventListener("click", function(){ if(!CONFIGS.length){toast("کانفیگی نیست");return;} createSubFor(0); });
+  }
+  
+  var btnSubAll = document.getElementById("btnSubAll");
+  if (btnSubAll) {
+    btnSubAll.addEventListener("click", function(){ createSubAll(); });
+  }
+  
+  var btnCopySub = document.getElementById("btnCopySub");
+  if (btnCopySub) {
+    btnCopySub.addEventListener("click", function(){
+      var v = document.getElementById("subHttps").value;
+      if (!v || v.indexOf("http")!==0) { toast("⚠ ابتدا لینک بسازید"); return; }
+      copyText(v);
+    });
+  }
+  
+  var btnOpenSub = document.getElementById("btnOpenSub");
+  if (btnOpenSub) {
+    btnOpenSub.addEventListener("click", function(){
+      var v = document.getElementById("subHttps").value;
+      if (v && v.indexOf("http")!==0) window.open(v, "_blank");
+      else if (CONFIGS.length) {
+        var body = buildSubPageHtml(CONFIGS[0]);
+        window.open(URL.createObjectURL(new Blob([body],{type: "text/html;charset=utf-8"})), "_blank");
+      } else toast("کانفیگی نیست");
+    });
+  }
+  
+  var btnCopyB64 = document.getElementById("btnCopyB64");
+  if (btnCopyB64) {
+    btnCopyB64.addEventListener("click", function(){
+      var list = CONFIGS.filter(isActive);
+      if (!list.length) { toast("کانفیگ فعالی نیست"); return; }
+      var body = list.map(function(c,i){ return "# "+(c.name||i)+"\n"+(c.confText||""); }).join("\n\n");
+      try { copyText(btoa(unescape(encodeURIComponent(body)))); } catch(e) { copyText(btoa(body)); }
+    });
+  }
+
+  document.body.addEventListener("click", function(e){
+    var btn = e.target.closest("button[data-a]");
+    if (!btn || btn.disabled) return;
+    var a = btn.getAttribute("data-a");
+    var i = parseInt(btn.getAttribute("data-i"), 10);
+    try { handleAction(a, i); } catch(err) { toast("خطا: "+(err.message||err)); }
+  });
+
+  load();
+  renderAll();
+  toast("مگاپنل ۲ ترابایتی گیمینگ آماده شد!");
+})();
+</script>
+</body>
+</html>
